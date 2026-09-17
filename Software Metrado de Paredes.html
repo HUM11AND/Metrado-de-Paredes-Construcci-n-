@@ -1,0 +1,2502 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ing. Humberto González</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+        :root {
+            --bg-body: #121212;
+            --bg-card: #1d1d1d;
+            --bg-card-inner: #242424;
+            --bg-input: #2b2b2b;
+            --border-card: #333333;
+            --border-input: #404040;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --accent-green: #4caf50;
+            --accent-red: #ff5252;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            padding: 30px 15px;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 1260px;
+        }
+
+        .header-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 10px;
+            padding: 24px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .header-left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+            width: 100%;
+        }
+
+        .header-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
+        }
+
+        .mode-segmented-control {
+            display: flex;
+            width: max-content;
+            min-width: 290px;
+            white-space: nowrap;
+            background-color: #17181a;
+            border: 1px solid #2d3036;
+            border-radius: 30px;
+            padding: 3px;
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .mode-segmented-btn {
+            flex: 1 1 0;
+            white-space: nowrap;
+            padding: 8px 18px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            border-radius: 25px;
+            border: none;
+            background: transparent;
+            color: #888888;
+            cursor: pointer;
+            transition: color 0.25s ease;
+            z-index: 2;
+        }
+
+        .mode-segmented-btn.active {
+            color: #000000;
+        }
+
+        .mode-help-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+            width: 100%;
+            padding-left: 8px;
+            font-size: 0.744rem;
+            line-height: 1.35;
+            letter-spacing: 0.02em;
+            color: #ffffff;
+            text-align: left;
+        }
+
+        .mode-help-line {
+            transition: color 0.25s ease, opacity 0.25s ease;
+        }
+
+        .mode-help-line.active {
+            color: #ffffff;
+        }
+
+        .mode-help-prefix {
+            color: #ffffff;
+            font-weight: 750;
+        }
+
+        .mode-help-line.active .mode-help-prefix {
+            color: #22c55e;
+        }
+
+        .mode-segmented-glider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            height: calc(100% - 6px);
+            width: calc(50% - 3px);
+            background-color: #ffffff;
+            border-radius: 25px;
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
+        }
+
+        .module-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 10px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .portfolio-branding-group {
+            width: fit-content;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            align-self: flex-start;
+            transform: translateX(125px);
+        }
+
+        .portfolio-access {
+            align-self: center;
+        }
+
+        .branding-title {
+            font-size: 1rem;
+            font-weight: 900;
+            letter-spacing: 0.18em;
+            color: #d1d5db;
+            text-transform: uppercase;
+            line-height: 1.5;
+        }
+
+        @media (min-width: 1000px) {
+            .branding-title { letter-spacing: 0.22em; }
+        }
+
+.header-title-group {
+            width: fit-content;
+            max-width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+        }
+
+        .subtitle {
+            width: 100%;
+            max-width: 100%;
+            text-align: center;
+            overflow: hidden;
+            white-space: nowrap;
+            font-size: clamp(0.66rem, 0.864vw, 0.936rem);
+            letter-spacing: -0.15px;
+            color: var(--text-muted);
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle-main,
+        .subtitle-norms {
+            display: inline;
+            max-width: none;
+        }
+
+        .main-title {
+            font-size: 1.25rem;
+            font-weight: 900;
+            letter-spacing: 0.19em;
+            color: #ffffff;
+            margin: 2px 0;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        @media (min-width: 1000px) {
+            .main-title { font-size: 1.05rem; letter-spacing: -0.13em; }
+        }
+
+
+        .btn-limits-info {
+            background-color: var(--bg-card-inner);
+            border: 1px solid var(--border-input);
+            color: var(--text-main);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            width: fit-content;
+        }
+
+        .btn-limits-info:hover {
+            background-color: #333;
+            border-color: #606060;
+        }
+
+        .application-info-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .application-info-header .module-header {
+            margin-bottom: 0;
+        }
+        .application-info-content {
+            display: block;
+        }
+        .application-info-text {
+            flex: 0 1 58%;
+            max-width: 58%;
+            min-width: 0;
+        }
+        .application-info-text h2 {
+            margin: 0 0 8px;
+            font-size: 1rem;
+            letter-spacing: .5px;
+        }
+        .application-info-text p {
+            margin: 5px 0;
+            color: var(--text-muted);
+            font-size: .82rem;
+            line-height: 1.5;
+        }
+        .application-info-text strong { color: var(--text-main); }
+
+
+
+        .module-header {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 16px;
+        }
+
+        .grid-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .inputs-col {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            align-items: end;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            gap: 6px;
+            width: 100%;
+        }
+
+        label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.25;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .results-purchase-note {
+            margin-top: 12px;
+            padding: 11px 13px;
+            border-left: 3px solid #4caf50;
+            border-radius: 6px;
+            background: rgba(76, 175, 80, 0.07);
+            color: var(--text-muted);
+            font-size: 0.76rem;
+            line-height: 1.45;
+        }
+        .results-purchase-note strong { color: #ffffff; }
+        .results-purchase-note b { color: #4caf50; font-weight: 600; }
+
+        input[type="text"][inputmode="decimal"] {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-input);
+            color: #ffffff;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            outline: none;
+            width: 100%;
+            height: 42px;
+            -moz-appearance: textfield;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input[type="text"][inputmode="decimal"]:disabled {
+            background-color: #1a1a1a;
+            color: #666666;
+            border-color: #2a2a2a;
+            cursor: not-allowed;
+        }
+
+        input[type="text"][inputmode="decimal"]::-webkit-outer-spin-button,
+        input[type="text"][inputmode="decimal"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="text"][inputmode="decimal"]:focus {
+            border-color: #606060;
+        }
+
+        .btn-select-block {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-input);
+            color: #ffffff;
+            padding: 10px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 42px;
+            transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+            width: 100%;
+            text-align: left;
+            gap: 8px;
+            min-width: 0;
+        }
+
+        #labelBloqueSeleccionado {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: clamp(0.68rem, 2.5vw, 0.88rem);
+            font-weight: 700;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .btn-select-block:hover {
+            border-color: #606060;
+            background-color: #333;
+        }
+
+        @keyframes pulse-green {
+            0% {
+                border-color: rgba(76, 175, 80, 0.4);
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4);
+            }
+            50% {
+                border-color: #4caf50;
+                box-shadow: 0 0 8px 2px rgba(76, 175, 80, 0.8);
+            }
+            100% {
+                border-color: rgba(76, 175, 80, 0.4);
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4);
+            }
+        }
+
+        body.modo-rapido-active input:not([disabled]),
+        body.modo-rapido-active .btn-select-block:not([disabled]) {
+            animation: pulse-green 1.5s infinite ease-in-out;
+            border-width: 1.5px;
+        }
+
+        .norma-badge {
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: #888888;
+            background-color: var(--bg-card-inner);
+            border: 1px solid var(--border-card);
+            padding: 8px 10px;
+            border-radius: 6px;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            line-height: 1.3;
+        }
+
+        .viewport-3d-box {
+            background-color: #141414;
+            border: 1px solid var(--border-card);
+            border-radius: 8px;
+            position: relative;
+            height: 220px;
+            overflow: hidden;
+        }
+
+        .viewport-label {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            background: rgba(0,0,0,0.6);
+            padding: 4px 8px;
+            border-radius: 4px;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .canvas-3d {
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .switch-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--bg-card-inner);
+            border: 1px solid var(--border-card);
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 14px;
+            gap: 10px;
+        }
+
+        .switch-label {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #4a4a4a;
+            transition: .3s;
+            border-radius: 26px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: #ffffff;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #606060;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        .info-box {
+            background-color: var(--bg-card-inner);
+            border: 1px solid var(--border-card);
+            padding: 14px;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 4px;
+        }
+
+        .info-item span.highlight {
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .info-item .legend-block {
+            display: block;
+            width: 100%;
+            margin-top: 2px;
+            white-space: nowrap;
+        }
+
+        .btn-calculate {
+            width: 100%;
+            background-color: #ffffff;
+            color: #000000;
+            font-weight: 900;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 24px;
+            position: relative;
+            animation: breath-glow 3s infinite ease-in-out;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .btn-calculate:hover {
+            background-color: #f0f0f0;
+            transform: scale(1.005);
+        }
+
+        @keyframes breath-glow {
+            0% { box-shadow: 0 0 6px rgba(255, 255, 255, 0.2); }
+            50% { box-shadow: 0 0 18px rgba(255, 255, 255, 0.55); }
+            100% { box-shadow: 0 0 6px rgba(255, 255, 255, 0.2); }
+        }
+
+        .results-section {
+            display: none;
+            opacity: 0;
+            background-color: var(--bg-card);
+            border: 2px solid var(--accent-green);
+            box-shadow: 0 0 12px rgba(76, 175, 80, 0.25);
+            border-radius: 10px;
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(20px) scale(0.98);
+        }
+
+        .results-section.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .results-section.pulse-active {
+            animation: green-border-pulse 1.2s ease-in-out 2;
+        }
+
+        @keyframes green-border-pulse {
+            0% { box-shadow: 0 0 5px rgba(76, 175, 80, 0.3); }
+            50% { box-shadow: 0 0 22px rgba(76, 175, 80, 0.8); }
+            100% { box-shadow: 0 0 12px rgba(76, 175, 80, 0.25); }
+        }
+
+        .area-summary-box {
+            background-color: var(--bg-card-inner);
+            border: 1px solid var(--border-card);
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-top: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .area-summary-title {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .area-summary-values {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .area-val-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .area-val-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .area-val-num {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .mortar-volume-box {
+            background-color: var(--bg-card-inner);
+            border: 1px solid var(--border-card);
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-top: 0px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .mortar-volume-title {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .mortar-volume-values {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .mortar-val-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .mortar-val-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .mortar-val-num {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+
+        .results-table th, .results-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-card);
+            font-size: 0.85rem;
+        }
+
+        .results-table th {
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            letter-spacing: 0.5px;
+        }
+
+        .results-table td.qty-teorico {
+            font-weight: 600;
+            color: #a0a0a0;
+            font-size: 0.95rem;
+        }
+
+        .results-table td.qty-comercial {
+            font-weight: 800;
+            color: #ffffff;
+            font-size: 1rem;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            overscroll-behavior: contain;
+            touch-action: none;
+        }
+
+        body.modal-open {
+            overflow: hidden !important;
+            overscroll-behavior: none;
+        }
+
+        .modal-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 12px;
+            max-width: 550px;
+            width: 100%;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+            animation: modalFadeIn 0.25s ease-out;
+            max-height: 90vh;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            touch-action: pan-y;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header-warning {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .modal-warning-icon-box {
+            width: 48px;
+            height: 48px;
+            background-color: #262214;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .modal-warning-icon {
+            width: 24px;
+            height: 24px;
+            color: #e5a913;
+        }
+
+        .modal-header-titles {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.2;
+        }
+
+        .modal-title.error-type {
+            color: var(--accent-red);
+        }
+
+        .modal-subtitle {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        .modal-body {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .limits-list {
+            list-style: none;
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .limits-list li {
+            background: var(--bg-card-inner);
+            padding: 8px 12px;
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-green);
+            font-size: 0.8rem;
+            color: #fff;
+            text-align: left;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--bg-card-inner);
+            border: 1px solid var(--border-input);
+            color: #ffffff;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: background-color 0.2s;
+        }
+
+        .modal-btn:hover {
+            background-color: #333;
+        }
+
+        .block-options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .block-option-card {
+            background-color: var(--bg-card-inner);
+            border: 1px solid var(--border-input);
+            border-radius: 8px;
+            padding: 12px 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s, border-color 0.2s, transform 0.1s;
+            text-align: left;
+        }
+
+        .block-option-card:hover {
+            background-color: #2e2e2e;
+            border-color: #606060;
+            transform: translateY(-1px);
+        }
+
+        .block-option-card.selected {
+            border-color: #ffffff;
+            background-color: #333333;
+        }
+
+        .block-option-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #ffffff;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .block-option-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .block-badge-type {
+            font-size: 0.68rem;
+            font-weight: 800;
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-concreto { background-color: #3a3a3a; color: #e0e0e0; }
+        .badge-arcilla { background-color: #5c2b18; color: #ff9d7d; }
+        .badge-custom { background-color: #1e3a5f; color: #90caf9; }
+
+
+        .mortar-segmented-control { width: 100%; max-width: 420px; margin: 0 auto 22px; }
+        .mortar-segmented-control .mode-segmented-btn { flex: 1; text-transform: uppercase; }
+        .mortar-choice-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin:0 0 20px; }
+        .mortar-choice-card { display:flex; flex-direction:column; gap:7px; min-width:0; }
+        .mortar-choice-card label { margin:0; }
+        .mortar-choice-btn { width:100%; min-height:46px; padding:11px 14px; border:1px solid var(--border-input); border-radius:7px; background:var(--bg-input); color:#fff; display:flex; align-items:center; justify-content:space-between; gap:12px; cursor:pointer; text-align:left; transition:border-color .2s, background-color .2s, box-shadow .2s; }
+        .mortar-choice-btn:hover { border-color:#606060; background:#333; }
+        .mortar-choice-btn:disabled { opacity:.45; cursor:not-allowed; background:#1a1a1a; border-color:#2a2a2a; }
+        .mortar-choice-btn:disabled:hover { border-color:#2a2a2a; background:#1a1a1a; }
+        .mortar-choice-btn .choice-value { font-size:.84rem; font-weight:800; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .mortar-choice-helper { text-align: justify; text-justify: inter-word; }
+        .mortar-choice-btn .choice-arrow { color:var(--text-muted); font-size:.75rem; flex-shrink:0; }
+        .mortar-choice-helper { font-size:.66rem; color:var(--text-muted); line-height:1.35; min-height:18px; }
+        .mortar-data-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px 18px; align-items:start; margin-top:2px; }
+        .mortar-data-grid .form-group { min-width:0; }
+        .field-note { font-size:.66rem; color:var(--text-muted); line-height:1.35; margin-top:0; min-height:0; }
+        .field-note-box { min-height:42px; display:flex; align-items:center; padding:9px 12px; border:1px solid var(--border-input); border-radius:6px; background:#1a1a1a; color:var(--text-muted); font-size:.72rem; line-height:1.3; }
+        .normative-warning { margin-top:20px; padding:13px 15px; border:1px solid #514722; border-left:3px solid #d7a91d; border-radius:7px; background:#211e13; color:#d8d2bd; display:flex; flex-direction:column; gap:5px; font-size:.73rem; line-height:1.45; }
+        .normative-warning strong { color:#f0d36b; font-size:.74rem; text-transform:uppercase; letter-spacing:.5px; }
+        .modal-selection-grid { display:grid; grid-template-columns:1fr; gap:10px; margin-top:8px; }
+        .modal-selection-option { width:100%; border:1px solid var(--border-input); background:var(--bg-card-inner); color:#fff; border-radius:8px; padding:13px 15px; text-align:left; cursor:pointer; transition:border-color .2s, background-color .2s, transform .1s; }
+        .modal-selection-option:hover { border-color:#707070; background:#303030; transform:translateY(-1px); }
+        .modal-selection-option.selected { border-color:#fff; background:#333; }
+        .modal-selection-option .option-title { display:block; font-size:.86rem; font-weight:800; }
+        .modal-selection-option .option-desc { display:block; margin-top:3px; font-size:.7rem; color:var(--text-muted); line-height:1.35; }
+        .modal-selection-option .option-badge { float:right; margin-left:10px; font-size:.65rem; font-weight:800; color:#bdbdbd; }
+        @media (max-width:650px){ .mortar-choice-grid,.mortar-data-grid{grid-template-columns:1fr; gap:14px;} .mortar-segmented-control{margin-bottom:18px;} }
+        .field-note, .field-note-box { font-size:.68rem; color:var(--text-muted); line-height:1.35; }
+        .field-note-box { background:var(--bg-card-inner); border:1px solid var(--border-input); border-radius:6px; min-height:42px; padding:10px 12px; }
+        .mini-toggle { position:relative; width:42px; height:24px; flex:0 0 auto; }
+        .mini-toggle input { opacity:0; width:0; height:0; }
+        .mini-toggle span { position:absolute; inset:0; background:#4a4a4a; border-radius:24px; cursor:pointer; transition:.25s; }
+        .mini-toggle span:before { content:""; position:absolute; width:16px; height:16px; left:4px; top:4px; background:#fff; border-radius:50%; transition:.25s; }
+        .mini-toggle input:checked + span { background:#fff; }
+        .mini-toggle input:checked + span:before { transform:translateX(18px); background:#111; }
+
+        /* Cabecera de escritorio: contenido agrupado a la izquierda y controles arriba a la derecha */
+        @media (min-width: 651px) {
+            .header-card {
+                flex-direction: row;
+                align-items: flex-start;
+                justify-content: space-between;
+                text-align: left;
+                gap: 16px;
+            }
+            .header-left {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: left;
+                width: auto;
+            }
+            .portfolio-branding-group {
+                align-items: center;
+                align-self: flex-start;
+                text-align: center;
+            }
+            .portfolio-access { align-self: center; }
+            .header-title-group {
+                align-items: center;
+                align-self: flex-start;
+                text-align: center;
+                width: fit-content;
+            }
+            .main-title { text-align: center; }
+            .subtitle { text-align: center; }
+            .header-actions {
+                width: auto;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-end;
+            }
+        }
+
+        @media (max-width: 650px) {
+            body { padding: 15px 10px; }
+            .module-card { padding: 16px; }
+            
+            .header-card { 
+                padding: 20px 16px;
+                margin-bottom: 16px; 
+                flex-direction: column; 
+                align-items: center; 
+                justify-content: center;
+                text-align: center;
+                gap: 16px; 
+            }
+            .header-left {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                width: 100%;
+            }
+            .application-info-text { max-width: 100%; flex-basis: 100%; }
+            .mortar-choice-btn { text-align: justify; text-justify: inter-word; }
+            .mortar-choice-btn .choice-value { text-align: justify; text-justify: inter-word; }
+            .mortar-choice-helper { text-align: justify; text-justify: inter-word; }
+            .btn-limits-info { transform: scale(0.9); transform-origin: right center; }
+            .header-actions { 
+                width: 100%; 
+                flex-direction: column; 
+                justify-content: center; 
+                align-items: center; 
+            }
+            .mode-help-text { align-items: center; padding-left: 0; text-align: center; }
+            .portfolio-branding-group { align-items: center; align-self: center; text-align: center; transform: none; margin-left: auto; margin-right: auto; }
+            .portfolio-access { align-self: center; transform: scale(0.81); transform-origin: center; }
+            .header-title-group { align-items: center; align-self: center; text-align: justify; width: 100%; }
+            .branding-title { font-size: 0.75rem; letter-spacing: 0.12em; text-align: justify; text-align-last: center; line-height: 1.4; width: 100%; }
+            .main-title { font-size: 1.25rem; letter-spacing: -0.01em; margin: 2px 0; text-align: justify; text-align-last: center; width: 100%; }
+            .subtitle { font-size: 0.66rem; text-align: justify; text-align-last: center; width: 100%; }
+            
+            .grid-split { grid-template-columns: 1fr; gap: 16px; }
+            .grid-2 { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .grid-3 { grid-template-columns: 1fr; gap: 10px; }
+            .viewport-3d-box { height: 180px; }
+            label { font-size: 0.68rem; margin-bottom: 4px; }
+            input[type="text"][inputmode="decimal"] { padding: 8px 10px; font-size: 0.88rem; height: 38px; }
+            .results-table th { padding: 6px 4px; font-size: 0.62rem; letter-spacing: 0px; line-height: 1.15; }
+            .results-table td { padding: 8px 4px; font-size: 0.75rem; }
+            .results-table td.qty-teorico { font-size: 0.82rem; }
+            .results-table td.qty-comercial { font-size: 0.88rem; }
+            .area-summary-box, .mortar-volume-box { flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 10px; padding: 12px 14px; }
+            .area-summary-title, .mortar-volume-title { text-align: center; width: 100%; }
+            .area-summary-values, .mortar-volume-values { width: 100%; justify-content: space-evenly; align-items: center; }
+            .area-val-group, .mortar-val-group { align-items: center; }
+            .switch-wrapper { padding: 10px 12px; }
+            .switch-label { font-size: 0.75rem; }
+
+            /* Alineación centrada para el título de la tarjeta de resultados en responsive */
+            .results-section .module-header {
+                text-align: center;
+            }
+        }
+
+
+        @media (max-width: 420px) {
+            .main-title { font-size: 1.08rem; }
+            .subtitle { font-size: 0.58rem; letter-spacing: -0.2px; }
+            .branding-title { font-size: 0.68rem; }
+        }
+
+        @media (max-width: 420px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            .results-table th { font-size: 0.58rem; }
+        }
+    
+        .field-note{display:block;margin-top:6px;color:var(--text-muted);font-size:.72rem;line-height:1.35}
+        .field-note-box{min-height:42px;display:flex;align-items:center;padding:10px 12px;border:1px solid var(--border-color);border-radius:8px;color:var(--text-muted);font-size:.78rem;line-height:1.35;background:rgba(255,255,255,.02)}
+        .normative-warning{margin-top:14px;padding:12px 14px;border-left:3px solid #d7a83e;background:rgba(215,168,62,.07);color:var(--text-muted);font-size:.76rem;line-height:1.45;border-radius:6px;display:flex;flex-direction:column;gap:5px}
+        .normative-warning strong{color:#d7a83e}
+        select{width:100%;padding:11px 12px;border-radius:8px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--text-primary);font:inherit}
+        select:focus{outline:none;border-color:#4caf50;box-shadow:0 0 0 2px rgba(76,175,80,.12)}
+        body.modo-rapido-active select:not([disabled]){border-color:rgba(76,175,80,.65);box-shadow:0 0 10px rgba(76,175,80,.08)}
+</style>
+<style>
+/* Selector de tipos: tarjetas compactas de una sola línea */
+.modal-selection-grid-compact{gap:6px;}
+.modal-selection-option-compact{display:flex!important;align-items:center;gap:9px!important;min-height:38px!important;height:38px!important;padding:7px 10px!important;white-space:nowrap;overflow:hidden;}
+.modal-selection-option-compact .option-title{flex:0 0 auto;font-size:.82rem!important;}
+.modal-selection-option-compact .option-desc-inline{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;text-align:left;color:var(--text-muted);font-size:.73rem;}
+.modal-selection-option-compact .option-badge{flex:0 0 auto;margin-left:auto;font-size:.68rem!important;}
+@media(max-width:700px){
+  .modal-selection-option-compact{height:36px!important;min-height:36px!important;padding:6px 8px!important;gap:6px!important;}
+  .modal-selection-option-compact .option-desc-inline{font-size:.68rem;}
+}
+</style>
+<script>
+// Entrada decimal unificada: el usuario puede escribir punto o coma; el cálculo usa punto internamente.
+function parseNumero(valor){
+  if (typeof valor === 'number') return valor;
+  const texto = String(valor ?? '').trim().replace(/,/g, '.');
+  return texto === '' ? NaN : parseFloat(texto);
+}
+
+// Formato visible para el usuario: coma decimal.
+// El cálculo interno continúa usando punto decimal.
+function formatoDecimal(valor, decimales){
+  return Number(valor).toFixed(decimales).replace('.', ',');
+}
+</script>
+
+<style>
+/* Acceso al portafolio: replicación visual del botón del programa de dosificación */
+.portfolio-access{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:4px 12px;
+  margin-bottom:8px;
+  align-self:center;
+  font-size:10px;
+  font-weight:700;
+  color:#d1d5db;
+  text-decoration:none;
+  text-transform:uppercase;
+  background:#2b2b2b;
+  border:1px solid #eab308;
+  border-radius:8px;
+  transition:all .2s ease;
+  box-shadow:0 0 4px rgba(234,179,8,.10);
+  flex-shrink:0;
+  z-index:10;
+  animation:portfolioPulse 2s infinite ease-in-out;
+  transform:scale(1.1);
+}
+.portfolio-access:hover{
+  color:#fff;
+  background:#333;
+}
+.portfolio-access svg{
+  width:14px;
+  height:14px;
+  color:#f59e0b;
+  flex-shrink:0;
+}
+.portfolio-access:focus-visible{
+  outline:2px solid #f3b36d;
+  outline-offset:3px;
+}
+@keyframes portfolioPulse{
+  0%,100%{
+    box-shadow:0 0 4px rgba(234,179,8,.16),0 0 8px rgba(234,179,8,.10);
+    border-color:rgba(234,179,8,.32);
+  }
+  50%{
+    box-shadow:0 0 12px rgba(234,179,8,.42),0 0 18px rgba(234,179,8,.24);
+    border-color:rgba(234,179,8,.62);
+  }
+}
+/* Ajuste final de cabecera de escritorio: misma composición visual que la referencia, manteniendo el bloque a la izquierda. */
+@media (min-width: 651px) {
+  .header-left {
+    align-items: flex-start;
+    text-align: left;
+    width: auto;
+    gap: 6px;
+  }
+  .portfolio-branding-group {
+    width: fit-content;
+    align-items: center;
+    align-self: flex-start;
+    text-align: center;
+    transform: translateX(35px);
+  }
+  .portfolio-access {
+    align-self: center;
+  }
+  .branding-title {
+    font-size: 1rem;
+    letter-spacing: 0.22em;
+    line-height: 1.5;
+    text-align: center;
+  }
+  .header-title-group {
+    width: fit-content;
+    align-items: center;
+    align-self: flex-start;
+    text-align: center;
+  }
+  .main-title {
+    font-size: 1.6rem;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    text-align: center;
+  }
+  .subtitle {
+    width: 100%;
+    text-align: center;
+    font-size: 0.78rem;
+    letter-spacing: 0;
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+  .header-actions {
+    width: auto;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+  }
+}
+</style>
+</head>
+<body class="modo-rapido-active">
+<div class="app-container">
+<header class="header-card">
+<div class="header-left">
+<div class="portfolio-branding-group">
+<a class="portfolio-access" href="https://humags93.wixsite.com/humberto-gonz" title="Ver Portafolio" aria-label="Ingresar al portafolio de Humberto González">
+<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+</svg>
+<span>INGRESAR AL PORTAFOLIO</span>
+</a>
+<div class="branding-title">ING. HUMBERTO GONZÁLEZ</div>
+</div>
+<div class="header-title-group">
+<h1 class="main-title">CONSTRUCCIÓN DE PAREDES</h1>
+<div class="subtitle">
+  <span class="subtitle-norms">ASTM C270 · COVENIN 5008-2019</span>
+</div>
+</div>
+</div>
+<div class="header-actions">
+<div class="mode-segmented-control" onclick="toggleModoCalculo()">
+<div class="mode-segmented-glider" id="modeGlider"></div>
+<button class="mode-segmented-btn active" id="btnModoRapido" type="button">Modo Rápido</button>
+<button class="mode-segmented-btn" id="btnModoAvanzado" type="button">Modo Avanzado</button>
+</div>
+<div class="mode-help-text" aria-live="polite">
+<div class="mode-help-line active" id="modeHelpRapido"><span class="mode-help-prefix">Modo rápido:</span> solo dimensiones</div>
+<div class="mode-help-line" id="modeHelpAvanzado"><span class="mode-help-prefix">Modo avanzado:</span> dimensiones y propiedades</div>
+</div>
+</div>
+</header>
+<form id="calcForm">
+<section class="module-card application-info-card">
+<div class="application-info-header">
+<div class="module-header">INFORMACIÓN DE LA APLICACIÓN</div>
+<button class="btn-limits-info" onclick="abrirModalLimitesInfo()" type="button">
+<span>?</span> Información General
+                </button>
+</div>
+<div class="application-info-content">
+<div class="application-info-text">
+<p>Herramienta para estimar las cantidades de bloques y mortero necesarias para la construcción de paredes de mampostería, a partir de las dimensiones del muro y del bloque seleccionado.</p>
+<p><strong>Normativas implementadas:</strong> ASTM C270 · COVENIN 5008:2019</p>
+<p><strong>Resultado:</strong> cantidad estimada de bloques, mortero, cemento, cal, arena y agua, incluyendo el desperdicio configurado.</p>
+</div>
+</div>
+</section>
+<section class="module-card">
+<div class="module-header">1. DIMENSIONES Y TIPO DE BLOQUE</div>
+<div class="grid-split">
+<div class="inputs-col">
+<div class="form-group">
+<label>TIPO DE BLOQUE COMERCIAL</label>
+<input id="tipoBloque" type="hidden" value="concreto_10"/>
+<button class="btn-select-block" onclick="abrirModalSelectorBloque()" type="button">
+<span id="labelBloqueSeleccionado">Bloque de cemento 10 (0.40 x 0.20 x 0.10 m)</span>
+<span style="font-size: 0.7rem; color: var(--text-muted); flex-shrink: 0;">▼</span>
+</button>
+</div>
+<div class="grid-2">
+<div class="form-group">
+<label for="largoBloque">LARGO (M)</label>
+<input data-default="0,40" disabled="" id="largoBloque" inputmode="decimal" max="0.60" min="0.05" required="" step="0.01" type="text" value="0,40"/>
+</div>
+<div class="form-group">
+<label for="altoBloque">ALTO (M)</label>
+<input data-default="0,20" disabled="" id="altoBloque" inputmode="decimal" max="0,30" min="0.05" required="" step="0.01" type="text" value="0,20"/>
+</div>
+</div>
+<div class="form-group">
+<label for="espesorBloque">ESPESOR / ANCHO (M)</label>
+<input data-default="0,10" disabled="" id="espesorBloque" inputmode="decimal" max="0,30" min="0.05" required="" step="0.01" type="text" value="0,10"/>
+</div>
+</div>
+<div class="viewport-3d-box">
+<div class="viewport-label">VISTA PREVIA ELEMENTO BLOQUE 3D</div>
+<canvas class="canvas-3d" id="canvasBloque"></canvas>
+</div>
+</div>
+</section>
+<section class="module-card">
+<div class="module-header">2. MÓDULO GEOMÉTRICO DE PARED</div>
+<div class="grid-split">
+<div class="inputs-col">
+<div class="grid-2">
+<div class="form-group">
+<label for="largoPared">LARGO (M)</label>
+<input data-default="1,00" id="largoPared" inputmode="decimal" max="20.0" min="0.1" required="" step="0.01" type="text" value="1,00"/>
+</div>
+<div class="form-group">
+<label for="altoPared">ALTO (M)</label>
+<input data-default="1,00" id="altoPared" inputmode="decimal" max="20.0" min="0.1" required="" step="0.01" type="text" value="1,00"/>
+</div>
+</div>
+<div class="form-group">
+<label for="areaVanos">ÁREA TOTAL EN VANOS (M²)</label>
+<input data-default="0,00" id="areaVanos" inputmode="decimal" min="0" placeholder="Ej: Puertas/Ventanas" required="" step="0.01" type="text" value="0,00"/>
+</div>
+</div>
+<div class="viewport-3d-box">
+<div class="viewport-label">VISTA PREVIA ESTRUCTURAL PARED 3D</div>
+<canvas class="canvas-3d" id="canvasPared"></canvas>
+</div>
+</div>
+</section>
+<section class="module-card">
+<div class="module-header">3. PARÁMETROS DEL MORTERO</div>
+<div aria-label="Configuración de cal" class="mode-segmented-control mortar-segmented-control" id="calSegmentedControl" role="group">
+<div class="mode-segmented-glider" id="calGlider"></div>
+<button class="mode-segmented-btn active" id="btnConCal" onclick="setUsarCal(true)" type="button">Con cal</button>
+<button class="mode-segmented-btn" id="btnSinCal" onclick="setUsarCal(false)" type="button">Sin cal</button>
+</div>
+<input aria-hidden="true" checked="" hidden="" id="usarCal" type="checkbox"/>
+<input id="normaMortero" type="hidden" value="ASTM"/>
+<input id="tipoMortero" type="hidden" value="S"/>
+<div class="mortar-choice-grid">
+<div class="mortar-choice-card">
+<label>NORMA DE DOSIFICACIÓN</label>
+<button class="mortar-choice-btn" id="btnNormaMortero" onclick="abrirModalSelectorNorma()" type="button">
+<span class="choice-value" id="labelNormaMortero">ASTM C270</span><span class="choice-arrow">▼</span>
+</button>
+<div class="mortar-choice-helper">Seleccione la norma aplicable al cálculo.</div>
+</div>
+<div class="mortar-choice-card">
+<label>TIPO DE MORTERO</label>
+<button class="mortar-choice-btn" id="btnTipoMortero" onclick="abrirModalSelectorTipo()" type="button">
+<span class="choice-value" id="labelTipoMortero">Tipo S</span><span class="choice-arrow">▼</span>
+</button>
+<div class="mortar-choice-helper" id="tipoMorteroHelper">Selección según ASTM C270.</div>
+</div>
+</div>
+<div class="info-box" id="mortarInfo">
+<div class="info-item">Tipo: <span class="highlight" id="infoTipo">Mortero Tipo S · ASTM C270</span></div>
+<div class="info-item">Resistencia de referencia: <span class="highlight" id="infoResistencia">12.4 MPa</span></div>
+<div class="info-item">Proporción <span class="legend-inline" id="infoPartesLeyenda">(Cemento : Cal : Arena)</span>: <span class="highlight" id="infoPartes">1 : 0,50 : 4,50</span></div>
+</div>
+<div class="mortar-data-grid">
+<div class="form-group">
+<label for="espesorJuntaCm">ESPESOR DE JUNTA (CM)</label>
+<input data-default="1,5" id="espesorJuntaCm" inputmode="decimal" max="3.0" min="0.5" required="" step="0.1" type="text" value="1,5"/>
+</div>
+<div class="form-group">
+<label for="relacionAg" id="relacionLabel">RELACIÓN AGUA / AGLOMERANTES</label>
+<input data-default="0,50" disabled="" id="relacionAg" inputmode="decimal" max="0.90" min="0,30" required="" step="0.01" type="text" value="0,50"/>
+<small class="field-note" id="relacionLeyenda">Valor referencial.</small>
+</div>
+<div class="form-group">
+<label for="porcentajeAire">AIRE ATRAPADO (%)</label>
+<input data-default="5" disabled="" id="porcentajeAire" inputmode="decimal" max="12" min="0" required="" step="0.1" type="text" value="5"/>
+</div>
+</div>
+<div class="normative-warning" id="normativeWarning">
+<strong>⚠ Criterio de dosificación</strong>
+<span id="normativeWarningText">La dosificación debe verificarse mediante ensayos o experiencia de campo cuando corresponda. Las relaciones de agua utilizadas como referencia en el programa no deben interpretarse como valores normativos directos.</span>
+</div>
+</section>
+<section class="module-card">
+<div class="module-header">4. PORCENTAJES DE DESPERDICIO Y MERMA</div>
+<div class="grid-2">
+<div class="form-group">
+<label for="desperdicioBloques">DESPERDICIO BLOQUES (%)</label>
+<input data-default="5" disabled="" id="desperdicioBloques" inputmode="decimal" max="30" min="0" required="" type="text" value="5"/>
+</div>
+<div class="form-group">
+<label for="desperdicioMortero">MERMA MORTERO (%)</label>
+<input data-default="10" disabled="" id="desperdicioMortero" inputmode="decimal" max="30" min="0" required="" type="text" value="10"/>
+</div>
+</div>
+</section>
+<section class="module-card">
+<div class="module-header">5. DENSIDADES DE MATERIALES (ESTADO SUELTO)</div>
+<div class="grid-3">
+<div class="form-group">
+<label for="densidadCemento">CEMENTO (KG/M³)</label>
+<input data-default="1500" disabled="" id="densidadCemento" inputmode="decimal" max="2000" min="800" required="" step="1" type="text" value="1500"/>
+</div>
+<div class="form-group">
+<label for="densidadCal">CAL (KG/M³)</label>
+<input data-default="600" disabled="" id="densidadCal" inputmode="decimal" max="1200" min="300" required="" step="1" type="text" value="600"/>
+</div>
+<div class="form-group">
+<label for="densidadArena">ARENA (KG/M³)</label>
+<input data-default="1500" disabled="" id="densidadArena" inputmode="decimal" max="2200" min="1000" required="" step="1" type="text" value="1500"/>
+</div>
+</div>
+</section>
+<section class="module-card">
+<div class="module-header">6. DENSIDADES ABSOLUTAS (BALANCE DE VOLUMEN)</div>
+<div class="grid-3">
+<div class="form-group"><label for="densidadAbsCemento">CEMENTO (KG/M³)</label><input data-default="3150" disabled="" id="densidadAbsCemento" inputmode="decimal" max="3500" min="2500" required="" step="1" type="text" value="3150"/></div>
+<div class="form-group"><label for="densidadAbsCal">CAL (KG/M³)</label><input data-default="2300" disabled="" id="densidadAbsCal" inputmode="decimal" max="2800" min="1500" required="" step="1" type="text" value="2300"/></div>
+<div class="form-group"><label for="densidadAbsArena">ARENA (KG/M³)</label><input data-default="2650" disabled="" id="densidadAbsArena" inputmode="decimal" max="3000" min="2000" required="" step="1" type="text" value="2650"/></div>
+</div>
+</section>
+<button class="btn-calculate" onclick="ejecutarCalculo()" type="button">CALCULAR MATERIALES</button>
+</form>
+<section class="results-section" id="resultsSection">
+<div class="module-header" style="color: #4caf50;">MATERIALES REQUERIDOS EN OBRA</div>
+<div class="area-summary-box">
+<span class="area-summary-title">SUPERFICIE Y GEOMETRÍA DE PARED</span>
+<div class="area-summary-values">
+<div class="area-val-group">
+<span class="area-val-label">Área Bruta</span>
+<span class="area-val-num" id="resAreaBruta">- m²</span>
+</div>
+<div class="area-val-group">
+<span class="area-val-label">Vanos</span>
+<span class="area-val-num" id="resAreaVanos">- m²</span>
+</div>
+<div class="area-val-group">
+<span class="area-val-label">Área Neta</span>
+<span class="area-val-num" id="resAreaNeta" style="color: #4caf50;">- m²</span>
+</div>
+</div>
+</div>
+<div class="mortar-volume-box">
+<span class="mortar-volume-title">VOLUMEN TOTAL DE MORTERO</span>
+<div class="mortar-volume-values">
+<div class="mortar-val-group">
+<span class="mortar-val-label">Neto (Teórico)</span>
+<span class="mortar-val-num" id="resVolMorteroNeto">- m³</span>
+</div>
+<div class="mortar-val-group">
+<span class="mortar-val-label">Con Merma</span>
+<span class="mortar-val-num" id="resVolMorteroTotal" style="color: #4caf50;">- m³</span>
+</div>
+</div>
+</div>
+<table class="results-table">
+<thead>
+<tr>
+<th>INSUMO</th>
+<th>CANT. TEÓRICA</th>
+<th>CANT. A COMPRAR</th>
+<th>UNIDAD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bloques de Mampostería</td>
+<td class="qty-teorico" id="resBloquesTeorico">-</td>
+<td class="qty-comercial" id="resBloquesComercial">-</td>
+<td>Unidades</td>
+</tr>
+<tr>
+<td>Cemento Portland</td>
+<td class="qty-teorico" id="resCementoTeorico">-</td>
+<td class="qty-comercial" id="resCementoComercial">-</td>
+<td>kg</td>
+</tr>
+<tr>
+<td>Cal Hidratada</td>
+<td class="qty-teorico" id="resCalTeorico">-</td>
+<td class="qty-comercial" id="resCalComercial">-</td>
+<td>kg</td>
+</tr>
+<tr>
+<td>Arena Lavada / Cernida</td>
+<td class="qty-teorico" id="resArenaTeorico">-</td>
+<td class="qty-comercial" id="resArenaComercial">-</td>
+<td id="resArenaUnidad">m³</td>
+</tr>
+<tr>
+<td>Agua Estimada</td>
+<td class="qty-teorico" id="resAguaTeorico">-</td>
+<td class="qty-comercial" id="resAguaComercial">-</td>
+<td>Litros</td>
+</tr>
+</tbody>
+</table>
+<div class="results-purchase-note" role="note">
+  <strong>Nota sobre las cantidades:</strong> La <b>cantidad teórica</b> representa el consumo exacto requerido para preparar la mezcla según los parámetros ingresados. Para la compra de materiales en obra, se recomienda utilizar la <b>cantidad a comprar</b>, que incorpora la merma prevista por pérdidas y desperdicios propios de la ejecución.
+</div>
+</section>
+</div>
+<div class="modal-overlay" id="modalOverlay">
+<div class="modal-card">
+<div class="modal-header-warning" id="modalWarningHeader">
+<div class="modal-warning-icon-box">
+<svg class="modal-warning-icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0-3.42 0z"></path>
+<line x1="12" x2="12" y1="9" y2="13"></line>
+<line x1="12" x2="12.01" y1="17" y2="17"></line>
+</svg>
+</div>
+<div class="modal-header-titles">
+<div class="modal-title" id="modalTitle">ADVERTENCIA</div>
+<div class="modal-subtitle" id="modalSubtitle">Uso asistido para cálculo de materiales</div>
+</div>
+</div>
+<div class="modal-body" id="modalBody"></div>
+<button class="modal-btn" onclick="cerrarModal()">ENTENDIDO</button>
+</div>
+</div>
+<script>    let sceneWall, cameraWall, rendererWall, wallMesh;
+    let sceneBlock, cameraBlock, rendererBlock, blockMesh;
+    let matConcreto, matArcilla, matNeutral;
+    let inputErrorActual = null;
+    let modoAvanzadoActivo = false;
+
+    let texParedConcretoCache = null;
+    let texParedArcillaCache = null;
+    let render3DPendiente = false;
+function crearTexturaParedBloques(lb = 0.40, hb = 0.20, esArcilla = false) {
+        const canvas = document.createElement('canvas');
+        canvas.width = 1024;
+        canvas.height = 1024;
+        const ctx = canvas.getContext('2d');
+
+        ctx.fillStyle = esArcilla ? '#b84924' : '#888888';
+        ctx.fillRect(0, 0, 1024, 1024);
+
+        for (let i = 0; i < 40000; i++) {
+            const x = Math.random() * 1024;
+            const y = Math.random() * 1024;
+            const shade = Math.floor(Math.random() * 60) - 30;
+            ctx.fillStyle = esArcilla 
+                ? `rgb(${184 + shade},${73 + shade},${36 + shade})`
+                : `rgb(${136 + shade},${136 + shade},${136 + shade})`;
+            ctx.fillRect(x, y, 2, 2);
+        }
+
+        const filas = 16;
+        const altoFila = 1024 / filas;
+        const anchoBloque = altoFila * (lb / hb);
+
+        ctx.strokeStyle = esArcilla ? '#3b1d14' : '#222222';
+        ctx.lineWidth = 10;
+
+        for (let r = 0; r <= filas; r++) {
+            const y = r * altoFila;
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(1024, y);
+            ctx.stroke();
+
+            const offsetX = (r % 2 === 0) ? 0 : (anchoBloque / 2);
+            for (let x = offsetX; x <= 1024 + anchoBloque; x += anchoBloque) {
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+                ctx.lineTo(x, y + altoFila);
+                ctx.stroke();
+            }
+        }
+
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        return texture;
+    }
+
+    function generarTexturasProcedurales() {
+        const canvasC = document.createElement('canvas');
+        canvasC.width = 512; canvasC.height = 512;
+        const ctxC = canvasC.getContext('2d');
+        ctxC.fillStyle = '#9e9e9e'; ctxC.fillRect(0, 0, 512, 512);
+        for (let i = 0; i < 25000; i++) {
+            const x = Math.random() * 512, y = Math.random() * 512;
+            const shade = Math.floor(Math.random() * 120) + 60;
+            ctxC.fillStyle = `rgb(${shade},${shade},${shade})`;
+            ctxC.fillRect(x, y, Math.random() > 0.85 ? 2.5 : 1.2, Math.random() > 0.85 ? 2.5 : 1.2);
+        }
+        const texConcretoMap = new THREE.CanvasTexture(canvasC);
+        texConcretoMap.wrapS = THREE.RepeatWrapping; texConcretoMap.wrapT = THREE.RepeatWrapping;
+
+        const canvasB = document.createElement('canvas');
+        canvasB.width = 512; canvasB.height = 512;
+        const ctxB = canvasB.getContext('2d');
+        ctxB.fillStyle = '#808080'; ctxB.fillRect(0, 0, 512, 512);
+        for (let i = 0; i < 20000; i++) {
+            const x = Math.random() * 512, y = Math.random() * 512, val = Math.floor(Math.random() * 255);
+            ctxB.fillStyle = `rgb(${val},${val},${val})`;
+            ctxB.fillRect(x, y, 1.5, 1.5);
+        }
+        const texConcretoBump = new THREE.CanvasTexture(canvasB);
+        texConcretoBump.wrapS = THREE.RepeatWrapping; texConcretoBump.wrapT = THREE.RepeatWrapping;
+
+        const canvasA = document.createElement('canvas');
+        canvasA.width = 512; canvasA.height = 512;
+        const ctxA = canvasA.getContext('2d');
+        ctxA.fillStyle = '#c14e28'; ctxA.fillRect(0, 0, 512, 512);
+        for (let i = 0; i < 6000; i++) {
+            const x = Math.random() * 512, y = Math.random() * 512, shadeVar = Math.floor(Math.random() * 30) - 15;
+            ctxA.fillStyle = `rgb(${193 + shadeVar},${78 + shadeVar},${40 + shadeVar})`;
+            ctxA.fillRect(x, y, 2, 2);
+        }
+        ctxA.fillStyle = 'rgba(50, 15, 5, 0.25)';
+        for (let y = 16; y < 512; y += 24) ctxA.fillRect(0, y, 512, 5);
+
+        const texArcillaMap = new THREE.CanvasTexture(canvasA);
+        texArcillaMap.wrapS = THREE.RepeatWrapping; texArcillaMap.wrapT = THREE.RepeatWrapping;
+
+        return { concretoMap: texConcretoMap, concretoBump: texConcretoBump, arcillaMap: texArcillaMap };
+    }
+
+    function crearGeometriaConcreto(lb, hb, eb) {
+        const shape = new THREE.Shape();
+        const x0 = -lb / 2, y0 = -eb / 2;
+        shape.moveTo(x0, y0); shape.lineTo(x0 + lb, y0); shape.lineTo(x0 + lb, y0 + eb); shape.lineTo(x0, y0 + eb); shape.closePath();
+
+        const cols = 3, paddingX = lb * 0.08, paddingY = eb * 0.18;
+        const holeWidth = (lb - (paddingX * (cols + 1))) / cols, holeHeight = eb - (paddingY * 2);
+
+        for (let c = 0; c < cols; c++) {
+            const holePath = new THREE.Path();
+            const hx = x0 + paddingX + c * (holeWidth + paddingX), hy = y0 + paddingY;
+            holePath.moveTo(hx, hy); holePath.lineTo(hx + holeWidth, hy); holePath.lineTo(hx + holeWidth, hy + holeHeight); holePath.lineTo(hx, hy + holeHeight); holePath.closePath();
+            shape.holes.push(holePath);
+        }
+
+        const geometry = new THREE.ExtrudeGeometry(shape, { depth: hb, bevelEnabled: false });
+        const pos = geometry.attributes.position, uv = geometry.attributes.uv;
+        for (let i = 0; i < pos.count; i++) {
+            uv.setXY(i, (pos.getX(i) + pos.getZ(i)) * 2.5, (pos.getY(i) + pos.getZ(i)) * 2.5);
+        }
+        uv.needsUpdate = true;
+        geometry.rotateX(-Math.PI / 2); geometry.center();
+        return geometry;
+    }
+
+    function crearGeometriaArcilla(lb, hb, eb, cols = 3) {
+        const shape = new THREE.Shape();
+        const x0 = -eb / 2, y0 = -hb / 2;
+        shape.moveTo(x0, y0); shape.lineTo(x0 + eb, y0); shape.lineTo(x0 + eb, y0 + hb); shape.lineTo(x0, y0 + hb); shape.closePath();
+
+        const rows = 3;
+        const paddingX = eb * 0.08;
+        const paddingY = hb * 0.08;
+        const holeWidth = (eb - (paddingX * (cols + 1))) / cols;
+        const holeHeight = (hb - (paddingY * (rows + 1))) / rows;
+
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                const holePath = new THREE.Path();
+                const hx = x0 + paddingX + c * (holeWidth + paddingX);
+                const hy = y0 + paddingY + r * (holeHeight + paddingY);
+                holePath.moveTo(hx, hy); 
+                holePath.lineTo(hx + holeWidth, hy); 
+                holePath.lineTo(hx + holeWidth, hy + holeHeight); 
+                holePath.lineTo(hx, hy + holeHeight); 
+                holePath.closePath();
+                shape.holes.push(holePath);
+            }
+        }
+
+        const geometry = new THREE.ExtrudeGeometry(shape, { depth: lb, bevelEnabled: false });
+        const pos = geometry.attributes.position, uv = geometry.attributes.uv;
+        for (let i = 0; i < pos.count; i++) {
+            uv.setXY(i, (pos.getZ(i) + pos.getX(i)) * 1.5, pos.getY(i) * 1.5);
+        }
+        uv.needsUpdate = true;
+        geometry.center();
+        return geometry;
+    }
+
+    function init3D() {
+        const texturas = generarTexturasProcedurales();
+
+        matConcreto = new THREE.MeshStandardMaterial({ map: texturas.concretoMap, bumpMap: texturas.concretoBump, bumpScale: 0.015, roughness: 0.9, metalness: 0.05, side: THREE.DoubleSide });
+        matArcilla = new THREE.MeshStandardMaterial({ map: texturas.arcillaMap, roughness: 0.65, side: THREE.DoubleSide });
+        matNeutral = new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.5, metalness: 0.1, side: THREE.DoubleSide });
+
+        texParedConcretoCache = crearTexturaParedBloques(0.40, 0.20, false);
+        texParedArcillaCache = crearTexturaParedBloques(0.30, 0.20, true);
+
+        const canvasWall = document.getElementById('canvasPared');
+        sceneWall = new THREE.Scene();
+        cameraWall = new THREE.PerspectiveCamera(45, canvasWall.clientWidth / canvasWall.clientHeight, 0.1, 100);
+        rendererWall = new THREE.WebGLRenderer({ canvas: canvasWall, antialias: true, alpha: true });
+        rendererWall.setSize(canvasWall.clientWidth, canvasWall.clientHeight);
+        cameraWall.position.set(0, 0, 3.15);
+
+        const lightW1 = new THREE.DirectionalLight(0xffffff, 1.2); lightW1.position.set(3, 4, 5);
+        sceneWall.add(lightW1); sceneWall.add(new THREE.AmbientLight(0x666666));
+
+        const geomWall = new THREE.BoxGeometry(1.8, 1.8, 0.15);
+        const matParedInit = new THREE.MeshStandardMaterial({ map: texParedConcretoCache, roughness: 0.85 });
+        
+        wallMesh = new THREE.Mesh(geomWall, matParedInit);
+        sceneWall.add(wallMesh);
+
+        const canvasBlock = document.getElementById('canvasBloque');
+        sceneBlock = new THREE.Scene();
+        cameraBlock = new THREE.PerspectiveCamera(45, canvasBlock.clientWidth / canvasBlock.clientHeight, 0.1, 100);
+        rendererBlock = new THREE.WebGLRenderer({ canvas: canvasBlock, antialias: true, alpha: true });
+        rendererBlock.setSize(canvasBlock.clientWidth, canvasBlock.clientHeight);
+        cameraBlock.position.set(0, 0, 3);
+
+        const lightB1 = new THREE.DirectionalLight(0xffffff, 1.4); lightB1.position.set(3, 4, 5);
+        sceneBlock.add(lightB1);
+        const lightB2 = new THREE.DirectionalLight(0xffffff, 0.6); lightB2.position.set(-3, -2, -3);
+        sceneBlock.add(lightB2); sceneBlock.add(new THREE.AmbientLight(0x666666));
+
+        const geomBlock = crearGeometriaConcreto(0.40, 0.20, 0.10);
+        blockMesh = new THREE.Mesh(geomBlock, matConcreto);
+        sceneBlock.add(blockMesh);
+
+        wallMesh.rotation.y = 0.35; wallMesh.rotation.x = 0.08;
+        blockMesh.rotation.y = 0.75; blockMesh.rotation.x = 0.45;
+
+        seleccionarPresetBloque();
+        instalarInvalidacionResultados();
+        actualizarVisualizacion3D();
+        animate();
+    }
+
+    function seleccionarPresetBloque() {
+        ocultarResultados();
+        const tipo = document.getElementById('tipoBloque').value;
+        const inLargo = document.getElementById('largoBloque');
+        const inAlto = document.getElementById('altoBloque');
+        const inEspesor = document.getElementById('espesorBloque');
+
+        if (tipo === 'personalizado') {
+            inLargo.disabled = false;
+            inAlto.disabled = false;
+            inEspesor.disabled = false;
+            // Valores iniciales del bloque personalizado.
+            // Se mantienen como referencia para restaurar automáticamente un dato inválido.
+            inLargo.value = "0,40";
+            inAlto.value = "0,20";
+            inEspesor.value = "0,10";
+            inLargo.setAttribute('data-default', '0.40');
+            inAlto.setAttribute('data-default', '0.20');
+            inEspesor.setAttribute('data-default', '0.10');
+        } else {
+            inLargo.disabled = true;
+            inAlto.disabled = true;
+            inEspesor.disabled = true;
+
+            inAlto.value = "0,20";
+
+            if (tipo.startsWith('concreto')) {
+                inLargo.value = "0,40";
+                inLargo.setAttribute('data-default', "0,40");
+            } else if (tipo.startsWith('arcilla')) {
+                inLargo.value = "0,30";
+                inLargo.setAttribute('data-default', "0,30");
+            }
+
+            if (tipo === 'arcilla_10' || tipo === 'concreto_10') {
+                inEspesor.value = "0,10";
+            } else if (tipo === 'arcilla_15' || tipo === 'concreto_15') {
+                inEspesor.value = "0,15";
+            }
+        }
+
+        solicitarActualizacion3D();
+    }
+
+    function abrirModalSelectorBloque() {
+        inputErrorActual = null;
+        const tipoActual = document.getElementById('tipoBloque').value;
+        
+        const htmlContent = `
+            <div class="block-options-grid">
+                <div class="block-option-card ${tipoActual === 'concreto_10' ? 'selected' : ''}" onclick="confirmarSeleccionBloque('concreto_10', 'Bloque de cemento 10 (0.40 x 0.20 x 0.10 m)')">
+                    <div>
+                        <span class="block-option-title">Bloque de Cemento 10</span>
+                        <span class="block-option-desc">Dimensiones: 0.40 x 0.20 x 0.10 m</span>
+                    </div>
+                    <span class="block-badge-type badge-concreto">Cemento</span>
+                </div>
+
+                <div class="block-option-card ${tipoActual === 'concreto_15' ? 'selected' : ''}" onclick="confirmarSeleccionBloque('concreto_15', 'Bloque de cemento 15 (0.40 x 0.20 x 0.15 m)')">
+                    <div>
+                        <span class="block-option-title">Bloque de Cemento 15</span>
+                        <span class="block-option-desc">Dimensiones: 0.40 x 0.20 x 0.15 m</span>
+                    </div>
+                    <span class="block-badge-type badge-concreto">Cemento</span>
+                </div>
+
+                <div class="block-option-card ${tipoActual === 'arcilla_10' ? 'selected' : ''}" onclick="confirmarSeleccionBloque('arcilla_10', 'Bloque arcilla 10 (0.30 x 0.20 x 0.10 m)')">
+                    <div>
+                        <span class="block-option-title">Bloque Arcilla 10</span>
+                        <span class="block-option-desc">Dimensiones: 0.30 x 0.20 x 0.10 m</span>
+                    </div>
+                    <span class="block-badge-type badge-arcilla">Arcilla</span>
+                </div>
+
+                <div class="block-option-card ${tipoActual === 'arcilla_15' ? 'selected' : ''}" onclick="confirmarSeleccionBloque('arcilla_15', 'Bloque arcilla 15 (0.30 x 0.20 x 0.15 m)')">
+                    <div>
+                        <span class="block-option-title">Bloque Arcilla 15</span>
+                        <span class="block-option-desc">Dimensiones: 0.30 x 0.20 x 0.15 m</span>
+                    </div>
+                    <span class="block-badge-type badge-arcilla">Arcilla</span>
+                </div>
+
+                <div class="block-option-card ${tipoActual === 'personalizado' ? 'selected' : ''}" onclick="confirmarSeleccionBloque('personalizado', 'Personalizado (Dimensiones libres)')">
+                    <div>
+                        <span class="block-option-title">Personalizado</span>
+                        <span class="block-option-desc">Definir largo, alto y espesor manualmente</span>
+                    </div>
+                    <span class="block-badge-type badge-custom">Libre</span>
+                </div>
+            </div>
+        `;
+        abrirModal("SELECCIONE TIPO DE BLOQUE", htmlContent, false, false, "Opciones disponibles");
+    }
+
+    function confirmarSeleccionBloque(valor, texto) {
+        document.getElementById('tipoBloque').value = valor;
+        document.getElementById('labelBloqueSeleccionado').innerText = texto;
+        cerrarModal();
+        seleccionarPresetBloque();
+    }
+
+    function mostrarAvisoBienvenida() {
+        inputErrorActual = null;
+        const htmlAviso = `<p>Esta herramienta proporciona cómputos métricos estimativos para obras de construcción. Sin embargo, debido a las variaciones de desperdicio y condiciones de sitio, los resultados deben ser revisados y validados por un profesional de ingeniería civil o arquitectura antes de la compra de insumos o ejecución. A continuación, usted acepta el carácter orientativo de esta proyección.</p>`;
+        abrirModal("ADVERTENCIA", htmlAviso, false, true, "Uso asistido para cálculo de materiales");
+    }
+
+    function obtenerMaterialActivo(tipo) {
+        if (tipo === 'personalizado') return matNeutral;
+        if (tipo.startsWith('arcilla')) return matArcilla;
+        if (tipo.startsWith('concreto')) return matConcreto;
+        return matNeutral;
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        // El muro conserva sus dimensiones visuales, pero gira suavemente 180°
+        // para darle dinamismo. Los inputs nunca modifican su geometría ni escala.
+        if (wallMesh) {
+            const t = performance.now() * 0.001;
+            wallMesh.rotation.y += 0.0035;
+            wallMesh.rotation.x = 0.08;
+        }
+        if (blockMesh) blockMesh.rotation.y += 0.007;
+        rendererWall.render(sceneWall, cameraWall);
+        rendererBlock.render(sceneBlock, cameraBlock);
+    }
+
+    function ocultarResultados() {
+        const sec = document.getElementById('resultsSection');
+        if (sec.classList.contains('show')) {
+            sec.classList.remove('show', 'pulse-active');
+            setTimeout(() => {
+                if (!sec.classList.contains('show')) {
+                    sec.style.display = 'none';
+                }
+            }, 500);
+        } else {
+            sec.style.display = 'none';
+            sec.classList.remove('pulse-active');
+        }
+        solicitarActualizacion3D();
+    }
+
+    function solicitarActualizacion3D() {
+        if (!render3DPendiente) {
+            render3DPendiente = true;
+            requestAnimationFrame(() => {
+                actualizarVisualizacion3D();
+                render3DPendiente = false;
+            });
+        }
+    }
+function abrirModal(titulo, htmlBody, esError = false, mostrarIconoAdvertencia = false, subtitulo = "") {
+        const modalTitle = document.getElementById('modalTitle');
+        const modalSubtitle = document.getElementById('modalSubtitle');
+        const modalBody = document.getElementById('modalBody');
+        const modalHeaderWarning = document.getElementById('modalWarningHeader');
+        
+        modalTitle.innerText = titulo;
+        if (esError) {
+            modalTitle.classList.add('error-type');
+        } else {
+            modalTitle.classList.remove('error-type');
+        }
+
+        if (mostrarIconoAdvertencia) {
+            modalHeaderWarning.style.display = 'flex';
+            modalSubtitle.innerText = subtitulo || "Uso asistido para cálculo de materiales";
+        } else {
+            modalHeaderWarning.style.display = 'block';
+            modalHeaderWarning.querySelector('.modal-warning-icon-box').style.display = 'none';
+            modalSubtitle.innerText = subtitulo;
+        }
+        
+        modalBody.innerHTML = htmlBody;
+        document.body.classList.add('modal-open');
+        document.getElementById('modalOverlay').style.display = 'flex';
+    }
+    // Cualquier modificación después de un cálculo invalida inmediatamente el resultado visible.
+window.onload = () => {
+        init3D();
+        setUsarCal(true);
+        updateMortarInfo();
+        mostrarAvisoBienvenida();
+    };
+
+// Valores predeterminados del modo rápido.
+function ponerDefaults(){
+  const c=cfgMortero();
+  document.getElementById('relacionAg').value=formatoDecimal(c.w,2); document.getElementById('porcentajeAire').value='5';
+  document.getElementById('desperdicioBloques').value='5';document.getElementById('desperdicioMortero').value='10';
+  document.getElementById('densidadCemento').value='1400';document.getElementById('densidadCal').value='600';document.getElementById('densidadArena').value='1600';
+  document.getElementById('densidadAbsCemento').value='3150';document.getElementById('densidadAbsCal').value='2300';document.getElementById('densidadAbsArena').value='2650';
+  actualizarCalUI();
+}
+    function instalarInvalidacionResultados(){
+        const form=document.getElementById('calcForm');
+        if(!form || form.dataset.resultInvalidationInstalled==='1') return;
+        const invalidar=()=>ocultarResultados();
+        form.addEventListener('input', invalidar, true);
+        form.addEventListener('change', invalidar, true);
+        form.dataset.resultInvalidationInstalled='1';
+    }
+
+function ejecutarCalculo(){
+  const usar=document.getElementById('usarCal').checked,c=cfgMortero();
+  const L=parseNumero(largoPared.value),H=parseNumero(altoPared.value),V=parseNumero(areaVanos.value)||0,lb=parseNumero(largoBloque.value),hb=parseNumero(altoBloque.value),eb=parseNumero(espesorBloque.value),j=parseNumero(espesorJuntaCm.value)/100;
+  const ratio=parseNumero(relacionAg.value),air=parseNumero(porcentajeAire.value)/100,Dm=parseNumero(desperdicioMortero.value),Db=parseNumero(desperdicioBloques.value);
+  const rc=parseNumero(densidadCemento.value),rk=usar?parseNumero(densidadCal.value):1,ra=parseNumero(densidadArena.value);
+  const rca=parseNumero(densidadAbsCemento.value),rka=usar?parseNumero(densidadAbsCal.value):1,raa=parseNumero(densidadAbsArena.value);
+  const A=L*H,An=A-V,mod=(lb+j)*(hb+j),N=An/mod,Vp=An*eb,Vb=N*lb*hb*eb,Vm=Vp-Vb,Vmt=Vm*(1+Dm/100);
+  const densidadAgua=1000;
+  const abs=1/rca+(usar?c.cal/rka:0)+c.arena/raa;
+  const waterVolume=ratio*(1+c.cal)/densidadAgua;
+  const x=(Vm*(1-air))/(abs+waterVolume);
+  // x = masa de cemento (kg). Las proporciones son volumétricas, por lo que
+  // cal y arena se obtienen a partir de sus respectivas partes y densidades sueltas.
+  const cement=x;
+  const cal=usar?x*c.cal:0;
+  const sand=x*c.arena;
+  const waterL=x*ratio*(1+c.cal);
+  const scale=Vmt/Vm;
+  resAreaBruta.innerText=formatoDecimal(A,2)+' m²';resAreaVanos.innerText=formatoDecimal(V,2)+' m²';resAreaNeta.innerText=formatoDecimal(An,2)+' m²';resVolMorteroNeto.innerText=formatoDecimal(Vm,3)+' m³';resVolMorteroTotal.innerText=formatoDecimal(Vmt,3)+' m³';
+  resBloquesTeorico.innerText=formatoDecimal(N,2);resBloquesComercial.innerText=Math.ceil(N*(1+Db/100)).toLocaleString();resCementoTeorico.innerText=formatoDecimal(cement,1);resCementoComercial.innerText=formatoDecimal(cement*scale,1);resCalTeorico.innerText=usar?formatoDecimal(cal,1):'0,0';resCalComercial.innerText=usar?formatoDecimal(cal*scale,1):'0,0';
+  const arenaTeoricoM3=sand/ra;
+  const arenaComercialM3=(sand*scale)/ra;
+  if(arenaComercialM3<.25){resArenaTeorico.innerText=formatoDecimal(sand,1);resArenaComercial.innerText=formatoDecimal(sand*scale,1);resArenaUnidad.innerText='kg';}else{resArenaTeorico.innerText=formatoDecimal(arenaTeoricoM3,3);resArenaComercial.innerText=formatoDecimal(arenaComercialM3,3);resArenaUnidad.innerText='m³';}
+  resAguaTeorico.innerText=formatoDecimal(waterL,1);resAguaComercial.innerText=formatoDecimal(waterL*scale,1);
+  resultsSection.style.display='block';requestAnimationFrame(()=>{resultsSection.classList.add('show');resultsSection.classList.remove('pulse-active');void resultsSection.offsetWidth;resultsSection.classList.add('pulse-active');resultsSection.scrollIntoView({behavior:'smooth'});});
+}
+// Reemplazo de la validación para los nuevos parámetros, sin correcciones silenciosas.
+function validarInputEspecifico(el,visual=true){
+  if(!el||el.disabled)return true;
+  const v=parseNumero(el.value),id=el.id;
+  let m='';
+  if(!Number.isFinite(v)) m='Por favor, ingrese un número válido.';
+  else if(['largoBloque','altoBloque','espesorBloque'].includes(id)){
+    const limites={
+      largoBloque:[0.05,0.60,'El largo del bloque personalizado debe estar entre 0.05 m y 0.60 m.'],
+      altoBloque:[0.05,0.30,'El alto del bloque personalizado debe estar entre 0.05 m y 0.30 m.'],
+      espesorBloque:[0.05,0.30,'El espesor del bloque personalizado debe estar entre 0.05 m y 0.30 m.']
+    }[id];
+    if(v<limites[0]||v>limites[1]) m=limites[2];
+  }
+  else if(id==='areaVanos'&&v>=((parseNumero(largoPared.value))*(parseNumero(altoPared.value))))m='El área de vanos no puede ser igual o mayor al área bruta de la pared.';
+  else if(id==='espesorJuntaCm'&&(v<.5||v>3))m='El espesor de junta debe estar entre 0.5 cm y 3.0 cm.';
+  else if(id==='relacionAg'&&(v<.30||v>.90))m='La relación de agua debe estar entre 0.30 y 0.90 para el rango de cálculo del programa.';
+  else if(id==='porcentajeAire'&&(v<0||v>12))m='El porcentaje de aire debe estar entre 0% y 12%.';
+  else if(['desperdicioBloques','desperdicioMortero'].includes(id)&&(v<0||v>30))m='La merma debe estar entre 0% y 30%.';
+  else if(id==='densidadCemento'&&(v<900||v>2000))m='La densidad suelta del cemento debe estar entre 900 y 2000 kg/m³.';
+  else if(id==='densidadCal'&&(v<300||v>1200))m='La densidad suelta de la cal debe estar entre 300 y 1200 kg/m³.';
+  else if(id==='densidadArena'&&(v<1000||v>2200))m='La densidad suelta de la arena debe estar entre 1000 y 2200 kg/m³.';
+  else if(id==='densidadAbsCemento'&&(v<2500||v>3500))m='La densidad absoluta del cemento debe estar entre 2500 y 3500 kg/m³.';
+  else if(id==='densidadAbsCal'&&(v<1500||v>2800))m='La densidad absoluta de la cal debe estar entre 1500 y 2800 kg/m³.';
+  else if(id==='densidadAbsArena'&&(v<2000||v>3000))m='La densidad absoluta de la arena debe estar entre 2000 y 3000 kg/m³.';
+  if(!m&&['densidadAbsCemento','densidadAbsCal','densidadAbsArena'].includes(id)){
+    const loose={densidadAbsCemento:parseNumero(densidadCemento.value),densidadAbsCal:parseNumero(densidadCal.value),densidadAbsArena:parseNumero(densidadArena.value)};
+    const key={densidadAbsCemento:'densidadCemento',densidadAbsCal:'densidadCal',densidadAbsArena:'densidadArena'}[id];
+    if(v<=loose[key])m='La densidad absoluta debe ser mayor que la densidad aparente/suelta del mismo material.';
+  }
+  if(m){
+    // Restaurar inmediatamente el valor predeterminado antes de mostrar el aviso.
+    // Así el usuario no tiene que volver a corregir manualmente el campo.
+    const valorDefault=el.getAttribute('data-default') || el.min || '0';
+    el.value=valorDefault;
+    inputErrorActual=null;
+    if(visual) ocultarResultados();
+    abrirModal('VALOR FUERA DE RANGO',m,true,false,'Error de validación');
+    solicitarActualizacion3D();
+    return false;
+  }
+  return true;
+}
+</script>
+<script>
+(function(){
+  function instalarEntradaDecimal(){
+    const inputs=document.querySelectorAll('input[type="text"][inputmode="decimal"]');
+    inputs.forEach(input=>{
+      if(input.dataset.decimalReady==='1') return;
+      input.dataset.decimalReady='1';
+      input.addEventListener('keydown',e=>{
+        if(e.ctrlKey||e.metaKey||e.altKey) return;
+        const permitidas=['Backspace','Delete','Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','Enter','.',','];
+        if(permitidas.includes(e.key)||/^[0-9]$/.test(e.key)) return;
+        e.preventDefault();
+      });
+      input.addEventListener('beforeinput',e=>{
+        if(!e.data) return;
+        if(!/^[0-9.,]+$/.test(e.data)){ e.preventDefault(); return; }
+        const next=input.value.slice(0,input.selectionStart)+e.data+input.value.slice(input.selectionEnd);
+        if((next.match(/[.,]/g)||[]).length>1) e.preventDefault();
+      });
+      input.addEventListener('input',()=>{
+        const start=input.selectionStart ?? input.value.length;
+        const end=input.selectionEnd ?? start;
+        const nuevo=input.value.replace(/\./g,',');
+        if(nuevo!==input.value){
+          const delta=(nuevo.slice(0,start).match(/,/g)||[]).length-(input.value.slice(0,start).match(/\./g)||[]).length;
+          input.value=nuevo;
+          const pos=start+delta;
+          input.setSelectionRange(pos, end+delta);
+        }
+        ocultarResultados();
+      });
+      input.addEventListener('blur',()=>validarInputEspecifico(input,true));
+      input.addEventListener('paste',e=>{
+        const texto=(e.clipboardData||window.clipboardData).getData('text').trim();
+        if(!/^[0-9]*([.,][0-9]*)?$/.test(texto)){ e.preventDefault(); return; }
+        e.preventDefault();
+        const normalizado=texto.replace(/\./g,',');
+        const start=input.selectionStart ?? input.value.length;
+        const end=input.selectionEnd ?? start;
+        input.setRangeText(normalizado,start,end,'end');
+        input.dispatchEvent(new Event('input',{bubbles:true}));
+      });
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',instalarEntradaDecimal);
+  else instalarEntradaDecimal();
+})();
+</script>
+<script>document.addEventListener("DOMContentLoaded",()=>{poblarTipos();ponerDefaults();updateMortarInfo();instalarInvalidacionResultados();});</script>
+<script>
+function cerrarModal(){
+  document.getElementById('modalOverlay').style.display='none';
+  document.body.classList.remove('modal-open');
+  const warningIconBox=document.querySelector('.modal-warning-icon-box');
+  if(warningIconBox) warningIconBox.style.display='flex';
+  inputErrorActual=null;
+  solicitarActualizacion3D();
+}function abrirModalLimitesInfo(){
+  inputErrorActual=null;
+  const html=`<ul class="limits-list">
+  <li><b>Largo del muro:</b> 0,10 a 20,00 m.</li>
+  <li><b>Alto del muro:</b> 0,10 a 20,00 m.</li>
+  <li><b>Área de vanos:</b> 0,00 m² hasta un valor menor que el área bruta del muro.</li>
+  <li><b>Largo del bloque personalizado:</b> 0,05 a 0,60 m.</li>
+  <li><b>Alto del bloque personalizado:</b> 0,05 a 0,30 m.</li>
+  <li><b>Espesor del bloque personalizado:</b> 0,05 a 0,30 m.</li>
+  <li><b>Espesor de junta:</b> 0,5 a 3,0 cm.</li>
+  <li><b>Relación de agua:</b> 0,30 a 0,90.</li>
+  <li><b>Porcentaje de aire:</b> 0 a 12 %.</li>
+  <li><b>Desperdicio de bloques:</b> 0 a 30 %.</li>
+  <li><b>Desperdicio de mortero:</b> 0 a 30 %.</li>
+  <li><b>Densidad suelta del cemento:</b> 900 a 2000 kg/m³.</li>
+  <li><b>Densidad suelta de la cal:</b> 300 a 1200 kg/m³.</li>
+  <li><b>Densidad suelta de la arena:</b> 1000 a 2200 kg/m³.</li>
+  <li><b>Densidad absoluta del cemento:</b> 2500 a 3500 kg/m³.</li>
+  <li><b>Densidad absoluta de la cal:</b> 1500 a 2800 kg/m³.</li>
+  <li><b>Densidad absoluta de la arena:</b> 2000 a 3000 kg/m³.</li>
+  </ul>`;
+  abrirModal('INFORMACIÓN GENERAL',html,false,false,'Límites de entrada');
+}
+</script>
+<script>// V3 FINAL UI/LOGIC OVERRIDES — norma/tipo por modal, proporciones prácticas y tarjeta de mortero limpia.
+function cfgMortero(){
+  const usarCal=document.getElementById('usarCal').checked;
+  const norma=usarCal ? document.getElementById('normaMortero').value : 'COVENIN';
+  const tipo=document.getElementById('tipoMortero').value || (norma==='ASTM'?'S':(usarCal?'II':'I'));
+  if(norma==='ASTM'){
+    const m={
+      M:{cal:0.25,w:0.45,r:'175.4 kgf/cm²'},
+      S:{cal:0.50,w:0.50,r:'126.5 kgf/cm²'},
+      N:{cal:1.00,w:0.55,r:'53.0 kgf/cm²'},
+      O:{cal:2.00,w:0.60,r:'24.5 kgf/cm²'}
+    }[tipo] || {cal:0.50,w:0.50,r:'126.5 kgf/cm²'};
+    return {norma:'ASTM C270',tipo,cal:m.cal,arena:3*(1+m.cal),w:m.w,res:m.r,emp:false};
+  }
+  const m={
+    I:{cal:0.25,w:0.50,r:'125 kgf/cm²'},
+    II:{cal:0.50,w:0.55,r:'75 kgf/cm²'},
+    III:{cal:1.00,w:0.60,r:'40 kgf/cm²'}
+  }[tipo] || {cal:0.50,w:0.55,r:'75 kgf/cm²'};
+  const cal=usarCal?m.cal:0;
+  return {norma:'COVENIN 5008:2019',tipo,cal,arena:3*(1+cal),w:m.w,res:m.r,emp:true};
+}
+function updateMortarInfo(){
+  const c=cfgMortero(), usar=document.getElementById('usarCal').checked;
+  document.getElementById('infoTipo').innerText=`Mortero Tipo ${c.tipo} · ${c.norma}`;
+  document.getElementById('infoResistencia').innerText=c.res;
+  document.getElementById('infoPartes').innerText=usar?`1 : ${formatoDecimal(c.cal,2)} : ${formatoDecimal(c.arena,2)}`:`1 : ${formatoDecimal(c.arena,2)}`;
+  document.getElementById('infoPartesLeyenda').innerText=usar?'(Cemento : Cal : Arena)':'(Cemento : Arena)';
+  document.getElementById('relacionLeyenda').innerText='Valor referencial.';
+  document.getElementById('normativeWarningText').innerText='La relación agua-cemento y el porcentaje de aire atrapado en la mezcla son valores asumidos. Se recomienda realizar los ensayos pertinentes para asegurar las resistencias sugeridas por la norma.';
+  if(!modoAvanzadoActivo) document.getElementById('relacionAg').value=formatoDecimal(c.w,2);
+  actualizarCalUI();
+}
+</script>
+<script>/* Selección de tipos de mortero. */
+function poblarTipos(){
+  const n=document.getElementById('normaMortero').value;
+  const sel=document.getElementById('tipoMortero');
+  const usarCal=document.getElementById('usarCal').checked;
+  const arr=n==='ASTM'?['M','S','N','O']:(usarCal?['I','II','III']:['I']);
+  if(!arr.includes(sel.value)) sel.value=n==='ASTM'?'S':'I';
+  document.getElementById('labelNormaMortero').innerText=n==='ASTM'?'ASTM C270':'COVENIN 5008:2019';
+  document.getElementById('labelTipoMortero').innerText=`Tipo ${sel.value}`;
+  document.getElementById('tipoMorteroHelper').innerText=n==='ASTM'?'Selección según ASTM C270.':'Selección según COVENIN 5008:2019.';
+}
+// Descripciones y estados visuales del selector de tipo.
+const estiloMorteroFinal=document.createElement('style');
+estiloMorteroFinal.textContent=`
+  .mortar-type-modal-grid{gap:7px;}
+  .mortar-type-modal-grid .mortar-type-option{
+    min-height:42px;height:42px;padding:8px 10px;
+    display:grid;grid-template-columns:62px 54px minmax(0,1fr);
+    align-items:center;column-gap:8px;text-align:left;
+    white-space:nowrap;overflow:hidden;
+  }
+  .mortar-type-modal-grid .option-badge{float:none;margin:0;font-size:.62rem;text-align:right;color:#bdbdbd;white-space:nowrap;}
+  .mortar-type-modal-grid .option-title{display:block;margin:0;font-size:.78rem;white-space:nowrap;}
+  .mortar-type-modal-grid .option-desc{display:block;margin:0;font-size:.68rem;line-height:1.1;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .mortar-choice-btn.choice-locked{opacity:.9;cursor:default;}
+  body.modo-rapido-active #btnTipoMortero .choice-value{font-size:.92rem; font-weight:850;}
+  .mortar-choice-btn.choice-locked .choice-arrow{display:none;}
+  body.modo-rapido-active #calSegmentedControl,
+  body.modo-rapido-active #btnTipoMortero{animation:none !important;border-color:transparent !important;box-shadow:none !important;cursor:default;}
+  body:not(.modo-rapido-active) #calSegmentedControl,
+  body:not(.modo-rapido-active) #btnTipoMortero{animation:none;box-shadow:none;}
+`;
+document.head.appendChild(estiloMorteroFinal);
+</script>
+<script>
+/* Lógica final de interfaz, controles de mortero y visualización 3D. */
+(function(){
+  function refrescarEtiquetaMortero(){
+    const usar=document.getElementById('usarCal').checked;
+    const norma=document.getElementById('normaMortero').value;
+    const tipo=document.getElementById('tipoMortero').value;
+    const quick=!modoAvanzadoActivo;
+    const lblN=document.getElementById('labelNormaMortero');
+    const lblT=document.getElementById('labelTipoMortero');
+    const helper=document.getElementById('tipoMorteroHelper');
+    const cardN=document.getElementById('btnNormaMortero')?.closest('.mortar-choice-card');
+    if(quick){
+      // En modo rápido, con cal y sin cal se muestra siempre "Uso general".
+      // La norma/tipo técnico continúa funcionando internamente.
+      if(cardN) cardN.style.display='none';
+      if(lblT) lblT.innerText='Uso general';
+      if(helper) helper.innerText='Configuración recomendada para uso general.';
+    }else{
+      if(cardN) cardN.style.display='';
+      if(lblN) lblN.innerText=norma==='ASTM'?'ASTM C270':'COVENIN 5008:2019';
+      if(lblT) lblT.innerText=`Tipo ${tipo}`;
+      if(helper) helper.innerText=norma==='ASTM'?'Selección según ASTM C270.':'Selección según COVENIN 5008:2019.';
+    }
+  }
+
+  function actualizarCalUI(){
+    const usar=document.getElementById('usarCal').checked;
+    const norma=document.getElementById('normaMortero');
+    const btnNorma=document.getElementById('btnNormaMortero');
+    const btnTipo=document.getElementById('btnTipoMortero');
+
+    if(!usar){
+      norma.value='COVENIN';
+      document.getElementById('tipoMortero').value='I';
+    }else if(!modoAvanzadoActivo){
+      // Modo rápido: siempre ASTM C270, Tipo N (uso general).
+      norma.value='ASTM';
+      document.getElementById('tipoMortero').value='N';
+    }else if(norma.value==='COVENIN'){
+      // En avanzado, COVENIN inicia en el tipo intermedio.
+      if(!['I','II','III'].includes(document.getElementById('tipoMortero').value)){
+        document.getElementById('tipoMortero').value='II';
+      }
+    }
+
+    norma.disabled=!usar || !modoAvanzadoActivo;
+    if(btnNorma) btnNorma.disabled=!usar || !modoAvanzadoActivo;
+
+    if(btnTipo){
+      // En modo rápido el tipo es informativo (ASTM C270, Tipo N) y no es editable.
+      // En avanzado se habilita cuando corresponde; sin cal queda bloqueado en COVENIN Tipo I.
+      const bloqueadoRapido=!modoAvanzadoActivo;
+      btnTipo.disabled=bloqueadoRapido || !usar;
+      btnTipo.classList.toggle('choice-locked',bloqueadoRapido || !usar);
+    }
+
+    const densCal=document.getElementById('densidadCal');
+    const densAbsCal=document.getElementById('densidadAbsCal');
+    if(densCal){
+      densCal.disabled=!(usar&&modoAvanzadoActivo);
+      densCal.value=usar ? (parseNumero(densCal.value)>0 ? densCal.value : '600') : '0';
+    }
+    if(densAbsCal){
+      densAbsCal.disabled=!(usar&&modoAvanzadoActivo);
+      densAbsCal.value=usar ? (parseNumero(densAbsCal.value)>0 ? densAbsCal.value : '2300') : '0';
+    }
+
+    document.getElementById('relacionLabel').innerText=usar?'RELACIÓN AGUA / AGLOMERANTES':'RELACIÓN AGUA / CEMENTO';
+    poblarTipos();
+    refrescarEtiquetaMortero();
+  }
+
+  function setUsarCal(valor){
+    document.getElementById('usarCal').checked=valor;
+    const gl=document.getElementById('calGlider'),con=document.getElementById('btnConCal'),sin=document.getElementById('btnSinCal');
+    if(gl) gl.style.transform=valor?'translateX(0%)':'translateX(100%)';
+    if(con) con.classList.toggle('active',valor);
+    if(sin) sin.classList.toggle('active',!valor);
+
+    if(valor){
+      document.getElementById('normaMortero').value='ASTM';
+      document.getElementById('tipoMortero').value=modoAvanzadoActivo ? 'N' : 'N';
+      document.getElementById('densidadCal').value='600';
+      document.getElementById('densidadAbsCal').value='2300';
+    }else{
+      document.getElementById('normaMortero').value='COVENIN';
+      document.getElementById('tipoMortero').value='I';
+      document.getElementById('densidadCal').value='0';
+      document.getElementById('densidadAbsCal').value='0';
+    }
+    actualizarCalUI();
+    const c=cfgMortero();
+    document.getElementById('relacionAg').value=formatoDecimal(c.w,2);
+    updateMortarInfo();
+    refrescarEtiquetaMortero();
+    ocultarResultados();
+  }
+
+  function invalidarResultadosPorCambioMortero(){
+    // Cualquier cambio en la configuración del mortero deja obsoleta la
+    // tarjeta de resultados. Se oculta al final del cambio, después de
+    // actualizar norma/tipo y demás indicadores, para evitar que otro
+    // refresco de la interfaz vuelva a mostrarla.
+    ocultarResultados();
+  }
+
+  function seleccionarNormaMortero(valor){
+    if(!modoAvanzadoActivo || !document.getElementById('usarCal').checked) return;
+    document.getElementById('normaMortero').value=valor;
+    // Cada norma entra en su opción de referencia: ASTM N / COVENIN II.
+    document.getElementById('tipoMortero').value=valor==='ASTM'?'N':'II';
+    const c=cfgMortero();
+    document.getElementById('relacionAg').value=formatoDecimal(c.w,2);
+    cerrarModal();
+    updateMortarInfo();
+    actualizarCalUI();
+    invalidarResultadosPorCambioMortero();
+  }
+
+  function abrirModalSelectorNorma(){
+    if(!modoAvanzadoActivo || !document.getElementById('usarCal').checked) return;
+    const actual=document.getElementById('normaMortero').value;
+    const html=`<div class="modal-selection-grid">
+      <button type="button" class="modal-selection-option ${actual==='ASTM'?'selected':''}" onclick="seleccionarNormaMortero('ASTM')">
+        <span class="option-badge">ASTM</span><span class="option-title">ASTM C270</span><span class="option-desc">Especificación de referencia para morteros de mampostería; selección Tipo N como opción de uso general.</span>
+      </button>
+      <button type="button" class="modal-selection-option ${actual==='COVENIN'?'selected':''}" onclick="seleccionarNormaMortero('COVENIN')">
+        <span class="option-badge">COVENIN</span><span class="option-title">COVENIN 5008:2019</span><span class="option-desc">Norma venezolana para morteros de mampostería; selección Tipo II como referencia intermedia.</span>
+      </button>
+    </div>`;
+    abrirModal('SELECCIONE LA NORMA',html,false,false,'Opciones de dosificación');
+  }
+
+  function toggleModoCalculo(){
+    modoAvanzadoActivo=!modoAvanzadoActivo;
+    const g=document.getElementById('modeGlider'),r=document.getElementById('btnModoRapido'),a=document.getElementById('btnModoAvanzado');
+    const hr=document.getElementById('modeHelpRapido'),ha=document.getElementById('modeHelpAvanzado');
+    g.style.transform=modoAvanzadoActivo?'translateX(100%)':'translateX(0%)';
+    r.classList.toggle('active',!modoAvanzadoActivo); a.classList.toggle('active',modoAvanzadoActivo);
+    if(hr) hr.classList.toggle('active',!modoAvanzadoActivo);
+    if(ha) ha.classList.toggle('active',modoAvanzadoActivo);
+    document.body.classList.toggle('modo-rapido-active',!modoAvanzadoActivo);
+    ['relacionAg','porcentajeAire','desperdicioBloques','desperdicioMortero','densidadCemento','densidadCal','densidadArena','densidadAbsCemento','densidadAbsCal','densidadAbsArena'].forEach(id=>{const e=document.getElementById(id);if(e)e.disabled=!modoAvanzadoActivo;});
+    if(!modoAvanzadoActivo){
+      document.getElementById('relacionAg').value='0,55';
+      document.getElementById('porcentajeAire').value='5';
+      document.getElementById('desperdicioBloques').value='5';
+      document.getElementById('desperdicioMortero').value='10';
+      document.getElementById('densidadCemento').value='1400';
+      document.getElementById('densidadCal').value=document.getElementById('usarCal').checked?'600':'0';
+      document.getElementById('densidadArena').value='1600';
+      document.getElementById('densidadAbsCemento').value='3150';
+      document.getElementById('densidadAbsCal').value=document.getElementById('usarCal').checked?'2300':'0';
+      document.getElementById('densidadAbsArena').value='2650';
+      document.getElementById('normaMortero').value='ASTM';
+      document.getElementById('tipoMortero').value='N';
+    }
+    actualizarCalUI();
+    updateMortarInfo();
+    ocultarResultados();
+  }
+
+  // Modelo 3D: conservar la proporción real largo/alto y hacer que el espesor sea
+  // proporcional al espesor de bloque, evitando la pared visualmente "gruesa".
+  let ultimaFirmaModelo3D = null;
+
+  function actualizarVisualizacion3D(){
+    const lb=parseNumero(document.getElementById('largoBloque').value)||0.40;
+    const hb=parseNumero(document.getElementById('altoBloque').value)||0.20;
+    const eb=parseNumero(document.getElementById('espesorBloque').value)||0.10;
+    const tipo=document.getElementById('tipoBloque').value;
+    const activeMaterial=obtenerMaterialActivo(tipo);
+
+    // La pared vuelve al modelo 3D original: geometría cuadrada fija,
+    // con su cuadrícula visible y sin deformarse según largo/alto/espesor
+    // introducidos para el cálculo. Las dimensiones reales solo se usan
+    // en los cálculos, no en la representación de la pared.
+    if(wallMesh){
+      const esArcilla=tipo.startsWith('arcilla');
+      const texPared=esArcilla?texParedArcillaCache:texParedConcretoCache;
+
+      // Una sola textura base mantiene siempre la misma cantidad y proporción
+      // visual de bloques/cuadrícula.
+      texPared.repeat.set(1,1);
+      if(wallMesh.material.map!==texPared){
+        wallMesh.material.map=texPared;
+        wallMesh.material.needsUpdate=true;
+      }
+
+      // Geometría visual fija del modelo original: 1.8 x 1.8 x 0.15.
+      wallMesh.scale.set(1,1,1);
+    }
+
+    // El modelo individual del bloque solo se reconstruye cuando cambian
+    // el tipo o sus dimensiones. Los inputs de pared, mortero y densidades
+    // no deben reiniciar su animación ni su rotación actual.
+    const firmaModelo3D = `${tipo}|${lb}|${hb}|${eb}`;
+    if(blockMesh && firmaModelo3D !== ultimaFirmaModelo3D){
+      const rotYActual = blockMesh.rotation.y;
+      const rotXActual = blockMesh.rotation.x;
+
+      sceneBlock.remove(blockMesh);
+      if(blockMesh.geometry) blockMesh.geometry.dispose();
+
+      let newGeom;
+      if(tipo.startsWith('concreto')) newGeom=crearGeometriaConcreto(lb,hb,eb);
+      else if(tipo==='arcilla_10') newGeom=crearGeometriaArcilla(lb,hb,eb,2);
+      else newGeom=crearGeometriaArcilla(lb,hb,eb,3);
+
+      blockMesh=new THREE.Mesh(newGeom,activeMaterial);
+      const maxDimB=Math.max(lb,hb,eb,0.1);
+      const scaleFactor=1.2/maxDimB;
+      blockMesh.scale.set(scaleFactor,scaleFactor,scaleFactor);
+      blockMesh.rotation.y=rotYActual;
+      blockMesh.rotation.x=rotXActual;
+      sceneBlock.add(blockMesh);
+      ultimaFirmaModelo3D = firmaModelo3D;
+    } else if(!blockMesh){
+      ultimaFirmaModelo3D = null;
+    }
+  }
+
+  // Selector de tipo de mortero en modo avanzado.
+  function abrirModalSelectorTipo(){
+    if(!modoAvanzadoActivo || !document.getElementById('usarCal').checked) return;
+    inputErrorActual=null;
+    const norma=document.getElementById('normaMortero').value;
+    const actual=document.getElementById('tipoMortero').value;
+    const opciones=norma==='ASTM'
+      ? [
+          ['M','175.4 kgf/cm²','Alta resistencia · cargas mayores'],
+          ['S','126.5 kgf/cm²','Estructural · muros portantes'],
+          ['N','53.0 kgf/cm²','Uso general · carga moderada'],
+          ['O','24.5 kgf/cm²','Interior · no portante']
+        ]
+      : [
+          ['I','125 kgf/cm²','Mayor exigencia estructural'],
+          ['II','75 kgf/cm²','Exigencia estructural intermedia'],
+          ['III','40 kgf/cm²','Menor exigencia estructural']
+        ];
+    const html=`<div class="modal-selection-grid mortar-type-modal-grid">${opciones.map(o=>`
+      <button type="button" class="modal-selection-option mortar-type-option ${actual===o[0]?'selected':''}" onclick="seleccionarTipoMortero('${o[0]}')">
+        <span class="option-badge">${o[1]}</span><span class="option-title">Tipo ${o[0]}</span><span class="option-desc">${o[2]}</span>
+      </button>`).join('')}</div>`;
+    abrirModal('SELECCIONE EL TIPO DE MORTERO',html,false,false,`Opciones ${norma==='ASTM'?'ASTM C270':'COVENIN 5008:2019'}`);
+  }
+
+  // Exponer las funciones definitivas al HTML.
+  window.actualizarCalUI=actualizarCalUI;
+  window.setUsarCal=setUsarCal;
+  window.seleccionarNormaMortero=seleccionarNormaMortero;
+  window.abrirModalSelectorNorma=abrirModalSelectorNorma;
+  window.abrirModalSelectorTipo=abrirModalSelectorTipo;
+  window.toggleModoCalculo=toggleModoCalculo;
+  window.actualizarVisualizacion3D=actualizarVisualizacion3D;
+
+  // El selector de tipo utiliza las descripciones definidas para el modo avanzado;
+  // el comportamiento para que el modo rápido quede en ASTM N.
+  window.seleccionarTipoMortero=function(valor){
+    if(!document.getElementById('usarCal').checked) return;
+    document.getElementById('tipoMortero').value=valor;
+    const c=cfgMortero();
+    document.getElementById('relacionAg').value=formatoDecimal(c.w,2);
+    cerrarModal();
+    updateMortarInfo();
+    actualizarCalUI();
+    invalidarResultadosPorCambioMortero();
+  };
+
+  // Si un modal de validación está abierto, Enter solo lo cierra; nunca debe
+  // propagar el submit del formulario ni ejecutar el cálculo.
+  document.addEventListener('keydown', function(e){
+    if(e.key !== 'Enter') return;
+    const overlay=document.getElementById('modalOverlay');
+    if(!overlay || overlay.style.display !== 'flex') return;
+    e.preventDefault();
+    e.stopPropagation();
+    cerrarModal();
+  }, true);
+
+  // Enter en campos numéricos: avanza al siguiente campo sin depender del
+  // listener original (que puede quedar bloqueado por otros manejadores).
+  // Se mantiene el comportamiento especial de Enter cuando hay un modal abierto.
+  document.addEventListener('keydown', function(e){
+    if(e.key !== 'Enter') return;
+    const overlay=document.getElementById('modalOverlay');
+    if(overlay && overlay.style.display === 'flex') return;
+
+    const elem=e.target;
+    if(!(elem instanceof HTMLInputElement)) return;
+    if(elem.type !== 'text' || elem.inputMode !== 'decimal' || elem.disabled) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    if(!validarInputEspecifico(elem, true)) return;
+
+    const inputs=Array.from(document.querySelectorAll('input[type="text"][inputmode="decimal"]:not([disabled])'))
+      .filter(input => input.offsetParent !== null);
+    const index=inputs.indexOf(elem);
+
+    if(index >= 0 && index < inputs.length - 1){
+      const siguiente=inputs[index + 1];
+      siguiente.focus();
+      try { siguiente.select(); } catch(_) {}
+    } else {
+      elem.blur();
+      ejecutarCalculo();
+    }
+  }, true);
+
+  document.addEventListener('wheel', function(e){
+    const overlay=document.getElementById('modalOverlay');
+    if(!overlay || overlay.style.display !== 'flex') return;
+    const card=overlay.querySelector('.modal-card');
+    if(card && card.contains(e.target)) return;
+    e.preventDefault();
+  }, {passive:false, capture:true});
+
+  // Refuerzo: los controles normativos del mortero también invalidan la
+  // tarjeta si cambian por cualquier vía (modal, teclado o código).
+  ['normaMortero','tipoMortero'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){
+      el.addEventListener('change', invalidarResultadosPorCambioMortero, true);
+      el.addEventListener('input', invalidarResultadosPorCambioMortero, true);
+    }
+  });
+
+  // Estado inicial: modo rápido, con cal, ASTM N.
+  modoAvanzadoActivo=false;
+  document.body.classList.add('modo-rapido-active');
+  document.getElementById('usarCal').checked=true;
+  document.getElementById('normaMortero').value='ASTM';
+  document.getElementById('tipoMortero').value='N';
+  actualizarCalUI();
+  const c0=cfgMortero();
+  document.getElementById('relacionAg').value=formatoDecimal(c0.w,2);
+  updateMortarInfo();
+  solicitarActualizacion3D();
+})();
+</script>
+</body>
+</html>
